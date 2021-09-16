@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<!-- 완벽한 형태는 아니지만 원하는대로 작동함 Jaewon -->
+	<entry key="selectList">
+		SELECT 
+		       RC.RECIPE_NO
+		     , RECIPE_TITLE
+		     , COOKING_TIME
+		     , RC.LIKE_COUNT
+		     , MAIN_IMG
+		     , NICKNAME
+		     , PROFILE_IMG
+		     , RC.AVRG_STAR_POINT
+		  FROM RECIPE RC
+		  JOIN MEMBER M ON M.USER_NO = RC.USER_NO
+		 WHERE RECIPE_NO = ? 
+            OR RECIPE_NO = ? 
+            OR RECIPE_NO = ?
+            OR RECIPE_NO = ?  
+            OR RECIPE_NO = ?  
+            OR RECIPE_NO = ? 
+        ORDER BY 
+           CASE WHEN RECIPE_NO LIKE ? THEN RECIPE_NO END ASC
+           , CASE WHEN RECIPE_NO LIKE ? THEN RECIPE_NO END ASC
+           , CASE WHEN RECIPE_NO LIKE ? THEN RECIPE_NO END ASC
+           , CASE WHEN RECIPE_NO LIKE ? THEN RECIPE_NO END ASC
+           , CASE WHEN RECIPE_NO LIKE ? THEN RECIPE_NO END ASC
+           , CASE WHEN RECIPE_NO LIKE ? THEN RECIPE_NO END ASC
+	</entry>
+</properties>

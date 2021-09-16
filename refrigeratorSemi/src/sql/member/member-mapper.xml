@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	
+	<entry key="insertMember">
+		INSERT 
+		  INTO MEMBER
+		  (
+		    USER_NO
+		  , USER_ID
+		  , NICKNAME
+		  , USER_PWD
+		  , USER_NAME
+		  , BIRTHDAY
+		  , GENDER
+		  , EMAIL
+		  , PROFILE_IMG
+		  )
+		  VALUES
+		  (
+		    SEQ_UNO.NEXTVAL
+		  , ?
+		  , ?
+		  , ?
+		  , ?
+		  , ?
+		  , ?
+		  , ?
+		  , ?
+		  )
+	</entry>
+	
+	<!-- @author daeun
+	           로그인 요청 -->
+	<entry key="loginMember">
+		SELECT 
+		       USER_NO
+		     , USER_ID
+		     , USER_PWD
+		     , USER_NAME
+             , USER_TYPE
+		     , GRADE
+		     , BIRTHDAY
+		     , GENDER
+		     , EMAIL
+             , PHONE
+             , PROFILE_IMG
+             , NICKNAME
+             , INTRO	     
+		     , MODIFY_DATE
+		     , SCRAP_COUNT
+             , LIKE_COUNT
+             , FOL_COUNT
+             , ENROLL_DATE
+		     , STATUS
+		  FROM MEMBER
+		 WHERE USER_ID = ?
+		   AND USER_PWD = ?
+		   AND STATUS = 'Y'
+	</entry>
+	
+	<!-- @author leeyeji -->
+	<!-- 페이징 총 페이지 수 -->
+	<entry key="selectListCount">
+		SELECT
+		       COUNT(*) COUNT
+		  FROM MEMBER
+		 WHERE STATUS = 'Y'
+		   AND USER_TYPE = 'N'	
+	</entry>
+	
+	<!-- @author leeyeji-->
+	<!-- 페이징 전체 목록 -->
+	<entry key="selectList">
+		SELECT *
+		  FROM (
+			    SELECT ROWNUM RNUM, M.*
+		          FROM (
+				        SELECT
+				               USER_NO
+		                     , USER_ID
+		                     , USER_NAME
+		                     , GRADE
+		                     , GENDER
+		                     , EMAIL
+		                     , PHONE
+		                     , NICKNAME
+		                     , STATUS
+		                  FROM MEMBER
+		                 WHERE USER_TYPE = 'N'
+		                 ORDER
+		                    BY ENROLL_DATE DESC
+		                ) M
+		        )
+		  WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<!-- @author leeyeji -->
+	<!-- 특정 회원 상세 조회 -->
+	<entry key="selectMember">
+		SELECT
+		       USER_PWD
+		     , USER_NAME
+		     , GRADE
+		     , GENDER
+		     , EMAIL
+		     , PHONE
+		     , NICKNAME
+		  FROM MEMBER
+		 WHERE USER_NO = ?
+		   AND STATUS = 'Y'
+	</entry>
+	
+	<!-- @author leeyeji -->
+	<!-- 회원 수정 -->
+	<entry key="updateMember">
+		UPDATE MEMBER 
+		   SET 
+		       GRADE = ?
+		     , GENDER = ?
+		     , EMAIL = ?
+		     , PHONE = ?
+		     , NICKNAME = ?
+		     , MODIFY_DATE = SYSDATE
+		 WHERE USER_NO = ?
+	</entry>
+	
+	<!-- @author leeyeji -->
+	<!-- 회원 삭제 -->
+	<entry key="deleteMember">
+		UPDATE
+			   MEMBER
+		   SET STATUS = 'N'
+		     , MODIFY_DATE = SYSDATE
+		 WHERE USER_NO = ?
+	</entry>
+
+	<!-- Hee Rak-->
+	<!-- 회원 한명 프로필 조회 -->
+	<entry key="selectProfile">
+		SELECT PROFILE_IMG
+		     , NICKNAME
+		     , INTRO
+		     , MODIFY_DATE
+		  FROM MEMBER
+		 WHERE USER_NO = ?
+	</entry>
+	
+	<!-- Hee Rak-->
+	<!-- 회원 한명 프로필 수정 -->
+	<entry key="updateProfile">
+		UPDATE MEMBER
+		   SET PROFILE_IMG = ?
+		     , NICKNAME = ?
+		     , INTRO = ?
+		     , MODIFY_DATE = SYSDATE
+		 WHERE USER_NO = ?
+	</entry>
+	
+	<!-- Hee Rak-->
+	<!-- 회원 한명 프로필 수정(이미지x) -->
+	<entry key="updateProfileNoImg">
+		UPDATE MEMBER
+		   SET NICKNAME = ?
+		     , INTRO = ?
+		     , MODIFY_DATE = SYSDATE
+		 WHERE USER_NO = ?
+	</entry>
+	
+	
+	<!-- @author daeun
+	           아이디 찾기 -->
+	<entry key="findId">
+		SELECT USER_ID
+		     , USER_NAME
+		     , EMAIL
+		     , PHONE
+		     , ENROLL_DATE
+	 	  FROM MEMBER
+		 WHERE USER_NAME = ?
+		   AND PHONE = ?
+		   AND EMAIL = ?
+	</entry>
+	
+	<!-- Jaewon-->
+	<!-- 회원 정보 변경-->
+	<entry key="updateMemberInfo">
+		UPDATE MEMBER
+		   SET USER_NAME = ?
+		     , GENDER = ?
+		     , EMAIL = ?
+		     , PHONE = ?
+		 WHERE USER_NO = ?
+	</entry>
+	
+	<entry key="updatePWD">
+		UPDATE MEMBER
+		   SET USER_PWD = ?
+		 WHERE USER_ID = ?
+		   AND USER_PWD = ? 
+	</entry>
+	
+	<!-- HeeRak-->
+	<!-- 회원 탈퇴 -->
+	<entry key="deleteUserMember">
+		UPDATE MEMBER
+		   SET STATUS = 'N'
+		 WHERE USER_NO = ?
+		   AND USER_PWD = ?
+		   AND STATUS = 'Y' 
+	</entry>
+	
+	<!-- @author leeyeji -->
+	<!-- 검색한 회원 총 count --> 
+	<entry key="selectUserListCount">
+        SELECT
+		       COUNT(*) COUNT
+		  FROM MEMBER
+         WHERE USER_ID LIKE ?
+	</entry>
+	
+	<!-- @author leeyeji --> 
+	<!-- 회원 검색 결과 -->
+	<entry key="selectSearchUserList">
+		SELECT *
+		  FROM (
+		        SELECT ROWNUM RNUM, A.*
+		          FROM (
+		                SELECT 
+                               USER_NO
+                             , USER_ID
+                             , USER_NAME
+                             , USER_TYPE
+                             , GRADE
+                             , GENDER
+                             , EMAIL
+                             , PHONE
+                             , NICKNAME
+                             , STATUS
+                          FROM MEMBER
+                         WHERE USER_ID LIKE ?
+                         ORDER
+		                    BY ENROLL_DATE DESC
+		                )A
+		    )
+		 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+
+	<!-- @author Jaewon 이메일 체크 -->
+	<entry key="checkEmail">
+		SELECT 
+		       USER_NO
+		  FROM MEMBER
+		 WHERE EMAIL = ?
+	</entry>
+	
+		<!-- @author Jaewon 폰 체크 -->
+	<entry key="checkPhone">
+		SELECT 
+		       USER_NO
+		  FROM MEMBER
+		 WHERE PHONE = ?
+	</entry>
+	
+
+</properties>

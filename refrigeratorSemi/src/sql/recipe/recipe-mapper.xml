@@ -1,0 +1,788 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+
+	<!-- @author seong -->
+	<!-- 레시피 상세 페이지의 댓글 전체 목록 조회 리스트  -->
+	<entry key="selectReplyList">
+			
+		SELECT REPLY_NO
+			    ,NICKNAME
+			    ,REPLY_CONTENT
+			    ,R.ENROLL_DATE
+			    ,PROFILE_IMG
+			FROM REPLY R
+			JOIN MEMBER M USING (USER_NO)
+			WHERE M.STATUS = 'Y'
+			AND R.DELETE_STATUS ='N'
+			AND RECIPE_NO = ?
+			ORDER BY R.ENROLL_DATE DESC
+	</entry>
+	
+	<!-- @author seong -->
+	<!-- 레시피 상세 페이지 댓글 작성 기능  -->
+	<entry key="insertReply">
+	
+		INSERT INTO REPLY
+    	(
+        REPLY_NO
+        ,USER_NO
+        ,RECIPE_NO
+        ,REPLY_CONTENT
+   		 )
+        VALUES
+    	(
+        SEQ_CNO.NEXTVAL
+        ,?
+        ,?
+        ,?
+    	)
+	
+	</entry>
+	
+		
+	<!-- @author seong -->
+	<!-- 레시피 후기 조회하기 -->
+	
+	<entry key="selectReviewList">
+		SELECT 
+		    REVIEW_NO
+		    ,NICKNAME
+		    ,REVIEW_CONTENT
+		    ,STAR
+		    ,IMG_NAME
+		    ,R.ENROLL_DATE ENROLL_DATE
+		   ,PROFILE_IMG
+		    
+		FROM REVIEW R
+		JOIN MEMBER USING(USER_NO)
+		WHERE RECIPE_NO = ?
+		ORDER BY ENROLL_DATE DESC
+	</entry>
+	
+	
+	
+	<!-- @author seong -->
+	<!-- 레시피 후기 작성 기능 -->
+	<entry key="insertReview">
+	
+	INSERT INTO REVIEW
+	    (
+	        REVIEW_NO
+	        ,USER_NO
+	        ,RECIPE_NO
+	        ,REVIEW_CONTENT
+	        ,STAR
+	        ,IMG_NAME
+	    ) VALUES
+	    (
+	        SEQ_RVNO.NEXTVAL
+	        , ?
+	        , ?
+	        , ?
+	        , ?
+	        , ?
+	    )
+	    
+	</entry>  
+	
+	<!-- @author daeun -->
+	<!-- 관리자페이지 - 배너 레시피 조회 -->
+	<entry key="selectRecipe">
+		SELECT RECIPE_NO
+		     , USER_ID
+		     , RECIPE_TITLE
+		     , MAIN_IMG
+		  FROM RECIPE R
+		  JOIN MEMBER USING (USER_NO)
+		 WHERE RECIPE_NO = ?
+		   AND R.STATUS = 'Y'
+	</entry>
+	
+	<!-- @author HeeRak -->
+	<!-- 레시피등록페이지 - 레시피 정보등록 -->
+	<entry key="insertRecipe">
+		INSERT
+		  INTO RECIPE
+		     (
+		       RECIPE_NO
+		     , USER_NO
+		     , RECIPE_TITLE
+		     , RECIPE_INTRO
+		     , SEVERAL_SERVINGS
+		     , COOKING_TIME
+			 , AVRG_STAR_POINT
+			 , RECIPE_ENROLL_DATE
+			 , MAIN_IMG
+			 , INGRE_IMG
+		     )
+		VALUES
+			 (
+			   SEQ_RNO.NEXTVAL
+			 , ?
+			 , ?
+			 , ?
+			 , ?
+			 , ?
+			 , 0
+			 , SYSDATE
+			 , ?
+			 , ?
+			 )
+		  
+	</entry>
+	
+	<!-- @author HeeRak -->
+	<!-- INGRE_SEARCH [INSERT] -->
+	<entry key="insertIngreSearch">
+		INSERT
+		  INTO INGRE_SEARCH
+		     (
+		       INGREDIENT_SEARCH
+		     , RECIPE_NO
+		     , CATEGORY_SNO
+		     )
+		VALUES
+			 (
+			   ?
+			 , SEQ_RNO.CURRVAL
+			 , ?
+			 )
+	</entry>
+	
+	<!-- @author HeeRak -->
+	<!-- INGRE [INSERT] -->
+	<entry key="insertIngreList">
+		INSERT
+		  INTO INGRE
+		  	 (
+		  	   INGRE_NO
+		  	 , RECIPE_NO
+		  	 , CATEGORY_SNO
+		  	 , INGRE_AMOUNT
+		  	 , INGRE_UNIT
+		  	 , INGRE_CATEGORY
+		  	 )
+		 VALUES
+		 	 (
+		 	   SEQ_INO.NEXTVAL
+		 	 , SEQ_RNO.CURRVAL
+		 	 , ?
+		 	 , ?
+		 	 , ?
+		 	 , ?
+		 	 )
+	</entry>
+	
+	<!-- @author HeeRak -->
+	<!-- 요리순서 insert[이미지o]  -->
+	<entry key="insertRecipeOrderList">
+		INSERT
+		  INTO RECIPE_ORDER
+		     (
+		       RECIPE_ORDER_NO
+		     , RECIPE_NO
+		     , RECIPE_ORDER
+		     , RECIPE_EXPLN
+		     , RECIPE_IMG
+		     )
+		VALUES
+			 (
+			   SEQ_RONO.NEXTVAL
+			 , SEQ_RNO.CURRVAL
+			 , ?
+			 , ?
+			 , ?
+			 )
+	</entry>
+	
+	<!-- @author HeeRak -->
+	<!-- 요리순서 insert[이미지x]  -->
+	<entry key="insertNoImgRecipeOrderList">
+		INSERT
+		  INTO RECIPE_ORDER
+		     (
+		       RECIPE_ORDER_NO
+		     , RECIPE_NO
+		     , RECIPE_ORDER
+		     , RECIPE_EXPLN
+		     )
+		VALUES
+			 (
+			   SEQ_RONO.NEXTVAL
+			 , SEQ_RNO.CURRVAL
+			 , ?
+			 , ?
+			 )
+	</entry>
+	
+	<!-- @author leeyeji -->
+	<!-- 페이징 - 총 페이지 수 -->
+	<entry key="selectListCount">
+		SELECT
+		       COUNT(*) COUNT
+		  FROM RECIPE
+         WHERE STATUS = 'N'
+	</entry>
+	
+	<!-- @author leeyeji -->
+	<!-- 레피시 전체 목록 조회 -->
+	<entry key="selectList">
+		SELECT *
+		  FROM (
+			    SELECT ROWNUM RNUM, A.*
+		          FROM (
+				        SELECT
+				               RECIPE_NO
+				             , USER_NO
+		                     , NICKNAME
+                             , RECIPE_TITLE
+                             , RECIPE_INTRO
+                             , AVRG_STAR_POINT
+                             , COUNT
+                             , RECIPE_ENROLL_DATE
+                             , MAIN_IMG
+		                  FROM RECIPE R
+                          JOIN MEMBER M USING (USER_NO)
+		                 ORDER
+		                    BY RECIPE_ENROLL_DATE DESC
+		                ) A
+		        )
+		  WHERE RNUM BETWEEN ? AND ?
+	</entry>	
+	
+		
+	<!-- @author daeun -->
+	<!-- 메인(오늘의 레시피) - 조회수 내림차순 레시피 조회 -->
+	<entry key="selectMainSortViewList">
+		SELECT *
+		FROM (
+		        SELECT ROWNUM RNUM, A.*
+		          FROM (
+		                SELECT
+		                       RECIPE_NO
+		                     , RECIPE_TITLE
+		                     , NICKNAME
+		                     , COUNT
+		                     , RECIPE_ENROLL_DATE
+		                     , MAIN_IMG
+		                  FROM RECIPE R
+		                  JOIN MEMBER USING (USER_NO)
+		                 WHERE R.STATUS = 'N'
+		                 ORDER
+		                    BY COUNT DESC
+		                )A
+		    )
+		 WHERE RNUM BETWEEN ? AND ?
+  <![CDATA[AND ROWNUM <= 10]]>
+	</entry>
+	
+	<!-- @author seong -->
+	<!-- 레시피 상세페이지 조회하기 -->
+	<entry key="selectRecipeDetailList">
+	
+    SELECT 
+    		 RECIPE_NO
+            ,USER_ID
+            ,RECIPE_TITLE
+            ,RECIPE_INTRO
+            ,SEVERAL_SERVINGS
+            ,COOKING_TIME
+            ,AVRG_STAR_POINT
+            ,COUNT 
+            ,R.SCRAP_COUNT
+            ,RECIPE_ENROLL_DATE
+            ,MAIN_IMG
+            ,INGRE_IMG
+	FROM RECIPE R
+	JOIN MEMBER USING(USER_NO)
+	WHERE RECIPE_NO = ?
+    AND R.STATUS = 'N'
+    
+	</entry>
+	
+	<!-- @author seong -->
+	<!-- 레시피 상세 페이지에서 요리 순서 조회하기 -->
+	
+	<entry key="selectRecipeOrder">
+	
+	SELECT   RECIPE_ORDER
+	        ,RECIPE_EXPLN
+	        ,RECIPE_IMG
+	FROM RECIPE_ORDER
+	WHERE RECIPE_NO = ?
+	
+	
+	</entry>
+	
+	
+	<!-- @author leeyeji -->
+	<!-- 레시피 최신순 조회 -->
+	<entry key="selectLatestRecipeList">
+		SELECT *
+		  FROM (
+		        SELECT ROWNUM RNUM, A.*
+		          FROM (
+		                SELECT
+		                       RECIPE_NO
+		                     , NICKNAME
+		                     , RECIPE_TITLE
+		                     , AVRG_STAR_POINT
+		                     , COUNT
+		                     , RECIPE_ENROLL_DATE
+		                     , MAIN_IMG
+		                  FROM RECIPE R
+		                  JOIN MEMBER USING (USER_NO)
+		                 WHERE R.STATUS = 'N'
+		                 ORDER
+		                    BY R.RECIPE_ENROLL_DATE DESC
+		                )A
+		    )
+		 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<!-- @author leeyeji -->
+	<!-- 레시피 별점순 조회 -->
+	<entry key="selectStarRecipeList">
+		SELECT *
+		  FROM (
+		        SELECT ROWNUM RNUM, A.*
+		          FROM (
+		                SELECT
+		                       RECIPE_NO
+		                     , NICKNAME
+		                     , RECIPE_TITLE
+		                     , AVRG_STAR_POINT
+		                     , COUNT
+		                     , RECIPE_ENROLL_DATE
+		                     , MAIN_IMG
+		                  FROM RECIPE R
+		                  JOIN MEMBER USING (USER_NO)
+		                 WHERE R.STATUS = 'N'
+		                 ORDER
+		                    BY R.AVRG_STAR_POINT DESC
+		                )A
+		    )
+		 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+		
+	<!--  레시피 상세조회 클릭시 해당 레시피에 조회수 증가 -->
+	<!-- @author seong 6/4-->
+	
+	<entry key="increaseCount">
+		UPDATE
+		       RECIPE
+		   SET COUNT = COUNT+1
+		 WHERE RECIPE_NO = ?
+		   AND STATUS = 'N'
+	</entry>
+		
+		
+		
+	<!-- @author seong -->
+	<!-- 레시피 상세보기 페이지 [필수 재료 조회] -->
+	<entry key="selectMainIngreList">
+	
+		SELECT 
+			INGRE_NO
+		    ,RECIPE_NO
+		    ,INGREDIENT_NAME
+		    ,INGRE_AMOUNT
+		    ,INGRE_UNIT
+	FROM INGRE 
+	JOIN SUB_CAT USING(CATEGORY_SNO)
+	WHERE RECIPE_NO = ?
+	AND INGRE_CATEGORY ='필수'
+	
+	</entry>
+	
+	<!-- @author seong -->
+	<!-- 레시피 상세보기 페이지 [부가 재료 조회] -->
+	<entry key="selectSubIngreList">
+	
+		SELECT 
+			INGRE_NO
+		    ,RECIPE_NO
+		    ,INGREDIENT_NAME
+		    ,INGRE_AMOUNT
+		    ,INGRE_UNIT
+	FROM INGRE 
+	JOIN SUB_CAT USING(CATEGORY_SNO)
+	WHERE RECIPE_NO = ?
+	AND INGRE_CATEGORY ='부가'
+	
+	</entry>
+	
+	<!-- @author leeyeji -->
+	<!-- 특정 유저 레시피 목록 조회 -->
+	<entry key="selectUserRecipeList">
+		SELECT *
+		  FROM (
+		        SELECT ROWNUM RNUM, R.*
+		          FROM (
+		                SELECT 
+                               RECIPE_NO
+                             , RECIPE_TITLE
+                             , AVRG_STAR_POINT
+                             , COUNT
+                             , MAIN_IMG
+                          FROM RECIPE
+                         WHERE USER_NO = (
+                                           SELECT
+                                                   USER_NO
+                                              FROM RECIPE
+                                             WHERE RECIPE_NO = ?
+                                         )
+                           AND STATUS = 'N'
+		                )R
+		    )
+		 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<!-- @author leeyeji -->
+	<!-- 쉐프 레시피 총 페이지 수 -->
+	<entry key="chefRecipeCount">
+		        SELECT
+				       COUNT(*) COUNT
+				  FROM RECIPE
+		         WHERE USER_NO = ?
+	</entry>
+	
+	<!-- @author leeyeji -->
+	<!-- 오늘의 쉐프 레시피 목록 조회 -->
+	<entry key="selectChefRecipeList">
+		SELECT *
+		  FROM (
+		        SELECT ROWNUM RNUM, A.*
+		          FROM (
+		                SELECT 
+                               RECIPE_NO
+                             , RECIPE_TITLE
+                             , AVRG_STAR_POINT
+                             , COUNT
+                             , MAIN_IMG
+                          FROM RECIPE
+                         WHERE USER_NO = ?
+		                )A
+		    )
+		 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	
+	<!-- @author seong -->
+	<!-- 레시피 상세보기 페이지 [검색버튼조회] -->
+	
+	<entry key="selectIngreSearchList">
+	
+		SELECT 
+				INGREDIENT_SEARCH
+				,CATEGORY_SNO
+		        ,RECIPE_NO
+		        ,CATEGORY_NAME
+		        ,INGREDIENT_NAME
+		FROM INGRE_SEARCH
+		JOIN SUB_CAT USING(CATEGORY_SNO)
+		JOIN MAIN_CAT ON(CATEGORY_NO = CATEGORY_MNO)
+		WHERE RECIPE_NO = ?
+	
+	</entry>
+	
+	<!-- @author Jaewon -->
+	<!-- 마이페이지 페이징 처리용  -->
+	<entry key="selectMyRecipeListCount">
+		SELECT
+		       COUNT(*) COUNT
+		  FROM RECIPE
+         WHERE USER_NO = ?
+           AND STATUS = 'N'
+	</entry>
+
+	<!-- @author Jaewon -->
+	<!-- 마이페이지 내가 쓴레시피 정보 조회해오는 sql문  -->
+	<entry key="selectMyRecipeList">
+    	SELECT * 
+		  FROM (
+		         SELECT ROWNUM RNUM, A.*
+		           FROM
+		                (SELECT 
+		                		RECIPE_NO
+                              , USER_ID 
+                              , RECIPE_TITLE
+		                      , AVRG_STAR_POINT
+		                      , COUNT 
+                              , R.SCRAP_COUNT
+                              , RECIPE_ENROLL_DATE	
+                              , MAIN_IMG	                      
+		                  FROM RECIPE R
+		                  JOIN MEMBER M
+                            ON R.USER_NO = M.USER_NO
+		                  WHERE R.STATUS = 'N' 
+                            AND R.USER_NO = ?
+		                  ORDER BY RECIPE_ENROLL_DATE DESC
+		              )A
+		      )
+		  WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<!-- @author Jaewon -->
+	<!-- 마이페이지 내가 쓴레시피 status 바꾸는 sql문  -->
+	<entry key="deleteMyRecipe">
+		UPDATE
+		       RECIPE
+		   SET STATUS = 'Y'
+		 WHERE USER_NO = ?
+		   AND RECIPE_NO = ?
+	</entry>
+
+	<!-- @author Jaewon -->
+	<!-- 마이페이지 내가 쓴레시피 수정버튼 클릭시 넘어가는 페이지에 필요한 정보 추출용 sql문  -->
+	<!-- 혹여나 필요하신분이 있을까 싹다 가져오는 SQL문으로 만듭니다. -->	
+	<entry key="selectMyRecipe">
+	    SELECT 
+    		   RECIPE_NO
+             , USER_NO
+             , RECIPE_TITLE
+             , RECIPE_INTRO
+             , SEVERAL_SERVINGS
+             , COOKING_TIME
+             , AVRG_STAR_POINT
+             , COUNT 
+             , LIKE_COUNT
+             , SCRAP_COUNT
+             , RECIPE_ENROLL_DATE
+             , STATUS
+             , MAIN_IMG
+             , INGRE_IMG
+	     FROM RECIPE 
+	    WHERE RECIPE_NO = ?
+	      AND USER_NO = ?
+	</entry>
+	
+	<!-- @author Jaewon -->
+	<!-- 여러행 조회될 여지가 있다. 얘는 재료버튼 가져오는 sql문  -->
+	<entry key="selectMyIngreSearch">
+		SELECT	
+			   INGREDIENT_SEARCH
+		     , RECIPE_NO
+	         , CATEGORY_SNO
+	      FROM INGRE_SEARCH
+	     WHERE RECIPE_NO = ?
+	     ORDER
+	        BY INGREDIENT_SEARCH ASC      
+	</entry>
+	
+	<!-- @author Jaewon -->
+	<!-- 여러행 조회될 여지가 있다. 얘는 재료 가져오는 sql문  -->
+	<entry key="selectMyIngre">
+		SELECT	
+			   INGRE_NO
+			 , RECIPE_NO
+			 , CATEGORY_SNO
+			 , INGRE_AMOUNT
+			 , INGRE_UNIT
+			 , INGRE_CATEGORY
+	      FROM INGRE
+	     WHERE RECIPE_NO = ?  
+   	     ORDER
+	        BY INGRE_NO ASC    
+	</entry>
+	
+	<!-- @author Jaewon -->
+	<!-- 여러행 조회될 여지가 있다. 얘는 요리 가져오는 sql문  -->
+	<entry key="selectMyRecipeOrder">
+		SELECT	
+			   RECIPE_ORDER_NO
+			 , RECIPE_NO
+			 , RECIPE_ORDER
+			 , RECIPE_EXPLN
+			 , RECIPE_IMG
+	      FROM RECIPE_ORDER
+	     WHERE RECIPE_NO = ? 
+     	 ORDER
+	        BY RECIPE_ORDER_NO ASC   
+	</entry>
+	
+	<!-- @author daeun -->
+	<!-- 메인페이지 - 레시피 정보 조회 -->
+	<entry key="selectMainRecipe">
+		SELECT 
+		        RECIPE_NO
+		      , NICKNAME
+		      , RECIPE_TITLE
+		      , COUNT
+		      , R.LIKE_COUNT AS LIKE_COUNT
+		  FROM RECIPE R
+		  JOIN MEMBER USING (USER_NO)
+		 WHERE R.STATUS = 'N'
+	</entry>
+
+
+	<!-- @author seong -->
+	<!-- 레시피 상세 페이지에서 작성된 리뷰의 총 갯수 조회 -->
+	<entry key="selectReviewCount">
+	
+	SELECT COUNT (*) REVIEWCOUNT
+	FROM REVIEW
+	WHERE RECIPE_NO = ?
+	
+	</entry>
+	
+	
+	<!-- @author seong -->
+	<!-- 레시피 상세 페이지에서 작성된 댓글의 총 갯수 조회 -->
+	<entry key="selectReplyCount">
+	
+	SELECT COUNT (*) REPLYCOUNT
+	FROM REPLY
+	WHERE RECIPE_NO = ?
+	
+	</entry>
+	
+	<!-- @author seong -->
+	<!-- 레시피 상세 페이지에서 평균 별점 업데이트 -->
+	<entry key="avgStarUpdate">
+		UPDATE RECIPE
+		SET AVRG_STAR_POINT = (SELECT TRUNC(AVG(STAR),2)
+		                        FROM REVIEW 
+		                        WHERE RECIPE_NO = ?)
+		WHERE RECIPE_NO = ?
+	</entry>
+	
+
+	<!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ -->
+	
+	<!-- @author leeyeji -->
+	<!-- 레시피 검색 총 갯수 -->
+	<entry key="selectSearchListCount">
+		SELECT
+		       COUNT(*) COUNT
+		  FROM RECIPE
+         WHERE RECIPE_TITLE LIKE ?	
+	</entry>
+	
+	<!-- @author leeyeji -->
+	<!-- 검색어로 레시피 검색 -->
+	<entry key="selectSearchList">
+		SELECT *
+		  FROM (
+		        SELECT ROWNUM RNUM, A.*
+		          FROM (
+		                SELECT 
+                               RECIPE_NO
+                             , NICKNAME
+                             , RECIPE_TITLE
+                             , AVRG_STAR_POINT
+                             , COUNT
+                             , MAIN_IMG
+                          FROM RECIPE R
+                          JOIN MEMBER USING(USER_NO)
+                         WHERE RECIPE_TITLE LIKE ?
+                         ORDER
+		                    BY R.RECIPE_ENROLL_DATE DESC
+		                )A
+		    )
+		 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<!-- @author Jaewon -->
+	<!-- 카테고리별 검색 메소드 페이징 바를 위한 값 가져오는 SQL문   -->
+	<entry key="selectCatListCount">
+		SELECT
+		       COUNT(*) COUNT
+		  FROM RECIPE  
+          JOIN INGRE USING (RECIPE_NO)
+        WHERE STATUS = 'N' 
+          AND CATEGORY_SNO = ?
+	</entry>
+	
+	<!-- @author Jaewon -->
+	<!-- 카테고리별 검색 메소드  SQL문   -->
+	<entry key="selectbyCatList">
+		SELECT *
+		  FROM (
+			    SELECT ROWNUM RNUM, A.*
+		          FROM (
+				        SELECT
+				               RECIPE_NO
+				             , USER_NO
+		                     , NICKNAME
+                             , RECIPE_TITLE
+                             , RECIPE_INTRO
+                             , AVRG_STAR_POINT
+                             , COUNT
+                             , RECIPE_ENROLL_DATE
+                             , MAIN_IMG
+		                  FROM RECIPE R
+                          JOIN MEMBER M USING (USER_NO)
+                          JOIN INGRE I USING(RECIPE_NO)
+                         WHERE CATEGORY_SNO = ? 
+		                 ORDER
+		                    BY RECIPE_ENROLL_DATE DESC
+		                ) A
+		        )
+		  WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<!-- Jaewon 레시피 일부 수정하는 메소드 -->
+	<entry key="updateRecipe">
+		UPDATE
+		       RECIPE
+		   SET RECIPE_TITLE = ?
+             , RECIPE_INTRO = ? 
+             , SEVERAL_SERVINGS = ?
+             , COOKING_TIME = ?    
+             , MAIN_IMG = ?       		   
+		 WHERE RECIPE_NO = ?
+		   AND USER_NO = ?
+	</entry>
+	
+	<!-- @author daeun -->
+	<!-- 메인(오늘의 레시피)  조회수 내림차순 레시피 조회 -->
+	<entry key="selectTodayRecipe">
+		SELECT RECIPE_NO, RECIPE_TITLE, NICKNAME, COUNT, MAIN_IMG
+		FROM (
+		        SELECT ROWNUM RNUM, A.*
+		          FROM (
+		                SELECT RECIPE_NO
+		                     ,  RECIPE_TITLE
+		                     , NICKNAME
+		                     , COUNT
+		                     , MAIN_IMG
+		                  FROM RECIPE R
+		                  JOIN MEMBER USING (USER_NO)
+		                 WHERE R.STATUS = 'N'
+		                 ORDER
+		                    BY COUNT DESC
+		                )A
+		    )
+		 WHERE RNUM BETWEEN 1 AND 6
+	</entry>
+	
+	<!-- @author daeun -->
+	<!-- 메인(쉐프가 선택한 레시피)  좋아요수 내림차순 레시피 조회 -->
+	<entry key="selectChefRecipe">
+		SELECT RECIPE_NO, RECIPE_TITLE, NICKNAME, LIKE_COUNT, MAIN_IMG
+		FROM (
+		        SELECT ROWNUM RNUM, A.*
+		          FROM (
+		                SELECT RECIPE_NO
+		                     , RECIPE_TITLE
+		                     , NICKNAME
+		                     , MAIN_IMG
+		                     , R.LIKE_COUNT
+		                  FROM RECIPE R
+		                  JOIN MEMBER USING (USER_NO)
+		                 WHERE R.STATUS = 'N'
+		                 ORDER
+		                    BY R.LIKE_COUNT DESC
+		                )A
+		    )
+		 WHERE RNUM BETWEEN 1 AND 1
+	</entry>
+	
+	
+	
+	
+</properties>

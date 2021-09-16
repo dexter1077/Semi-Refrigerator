@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<!-- @author HeeRak -->
+	<!-- 로그인한 유저 번호로 팔로우관계list select -->
+	<entry key="selectFollowListCount">
+		SELECT COUNT(*)
+		  FROM FOLLOW
+		 WHERE FOLLOW_USER_NO = ?
+	</entry>
+	
+	<!-- @author HeeRak -->
+	<!-- 팔로우한 유저 일부통계 select -->
+	<entry key="selectFollowStatsList">
+	SELECT *
+		  FROM (
+		        SELECT ROWNUM RNUM, A.*
+		          FROM (
+		                SELECT USER_NO
+		                     , PROFILE_IMG
+		                     , NICKNAME
+		                     , SCRAP_COUNT
+		                     , LIKE_COUNT
+		                     , FOL_COUNT
+		                  FROM MEMBER 
+		                 WHERE STATUS = 'Y' 
+		                   AND USER_NO IN (SELECT FOLLOWING_USER_NO
+                                             FROM FOLLOW
+                                            WHERE FOLLOW_USER_NO = ?)
+		                 ORDER
+		                    BY MODIFY_DATE DESC
+		               )A     
+		        )
+		 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<!-- @author HeeRak -->
+	<!-- 팔로잉한 유저 대표이미지 최근 4개-->
+	<entry key="selectTopRecipe">
+		SELECT *
+		  FROM (SELECT ROWNUM RNUM, A.*
+		          FROM (SELECT MAIN_IMG
+		                  FROM RECIPE
+		                 WHERE USER_NO = ?
+		                 ORDER
+		                    BY RECIPE_ENROLL_DATE DESC)A)
+		 WHERE RNUM BETWEEN 1 AND 4
+	</entry>
+	
+	<!-- @author HeeRak -->
+	<!-- 팔로잉한 유저 통계 데이터 [총합 레시피 작성수, 유저평균별점]-->
+	<entry key="selectFollowStatsListCount">
+		SELECT COUNT(*)
+		     , AVG(AVRG_STAR_POINT)
+		  FROM RECIPE
+		 WHERE USER_NO = ?
+		   AND STATUS = 'N'
+	</entry>
+	
+	<!-- @author HeeRak -->
+	<!-- DELETE 팔로우관계 -->
+	<entry key="deleteFollowRelation">
+		DELETE 
+		  FROM FOLLOW
+		 WHERE FOLLOW_USER_NO = ?
+		   AND FOLLOWING_USER_NO = ? 
+	</entry>
+	
+	
+
+</properties>

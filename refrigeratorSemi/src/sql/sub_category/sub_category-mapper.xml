@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="selectSubList">
+		SELECT 
+		        CATEGORY_SNO
+		      , CATEGORY_NO
+		      , INGREDIENT_NAME
+		  FROM SUB_CAT    
+		 ORDER
+		    BY CATEGORY_SNO  
+	</entry>
+	
+	<entry key="insertSubCategory">
+		INSERT
+		  INTO SUB_CAT
+		  (
+		  	CATEGORY_SNO
+		  , CATEGORY_NO
+		  , INGREDIENT_NAME	
+		  )
+		 VALUES
+		 (
+		 	SEQ_SCNO.NEXTVAL
+		  , ?	
+		  , ?
+		 )
+	</entry>
+	
+	<!-- Main카테고리 번호 받아 해당 Sub카테고리 list조회 -->
+	<!-- @author HeeRak -->
+	<entry key="selectSubListByMainCategory">
+		SELECT 
+		       CATEGORY_SNO
+		     , INGREDIENT_NAME
+		  FROM SUB_CAT
+		 WHERE CATEGORY_NO = ?
+		 ORDER
+		    BY CATEGORY_SNO  
+	</entry>
+	
+	
+		
+	<!-- 관리자단에서 카테고리 소분류 수정 -->
+	<!-- @author seong 6/2 -->
+
+	<entry key="updateSubCategory">
+	
+	UPDATE SUB_CAT
+	SET INGREDIENT_NAME = ?
+	    ,CATEGORY_NO = ?
+	    ,CATEGORY_SNO = SEQ_SCNO.NEXTVAL
+	WHERE CATEGORY_SNO = ?
+	
+	</entry>
+	
+	
+</properties>

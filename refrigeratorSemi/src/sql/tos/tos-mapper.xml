@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	
+	<entry key="selectListCount">
+		SELECT
+		       COUNT(*) COUNT
+		  FROM TOS
+	</entry>
+
+	<entry key="selectList">
+		SELECT * 
+		   FROM (
+		         SELECT ROWNUM RNUM, A.*  
+		           FROM (
+		                 SELECT 
+		                        TOS_NO
+		                      , TOS_CATEGORY
+		                      , TOS_PAGE
+		                      , UPLOAD_DATE
+		                      , ENROLL_DATE
+		                      , MODIFY_DATE
+		                      , TOS_NOTE
+		                      , TOS_TITLE
+		                      , TOS_CONTENT
+		                  FROM TOS  
+		                 ORDER
+		                    BY ENROLL_DATE DESC
+		                 ) A
+		        )
+		WHERE RNUM BETWEEN ? AND ?	
+	</entry>
+
+	<entry key="insertTos">
+		INSERT 
+		  INTO TOS
+		  (
+		    TOS_NO
+		  , TOS_CATEGORY
+		  , TOS_PAGE
+		  , TOS_NOTE
+		  , TOS_TITLE
+		  , TOS_CONTENT
+		  )
+		  VALUES
+		  (
+		    SEQ_TOSNO.NEXTVAL
+		  , ?
+		  , ?
+		  , ?
+		  , ?
+		  , ?
+		  )
+	</entry>
+	
+	<entry key="selectTos">
+		SELECT
+			   TOS_NO	
+		     , TOS_TITLE
+		     , TOS_CATEGORY
+		     , TOS_PAGE
+		     , TOS_CONTENT
+		     , TOS_NOTE
+		  FROM TOS
+		 WHERE TOS_NO = ?
+	</entry>
+	
+	<entry key="updateTos">
+		UPDATE 
+		       TOS
+		   SET TOS_TITLE = ?
+		     , TOS_CATEGORY = ? 
+		     , TOS_PAGE = ?
+		     , UPLOAD_DATE = ? 
+		     , TOS_CONTENT = ?
+		     , TOS_NOTE = ? 
+		 WHERE TOS_NO = ?
+	</entry>
+	
+	<entry key="deleteTos">
+		DELETE 
+		  FROM TOS
+		 WHERE TOS_NO = ?
+	</entry>
+	
+	<entry key="selectUsableTos">
+		SELECT
+			   TOS_NO	
+		     , TOS_TITLE
+		     , TOS_CATEGORY
+		     , TOS_PAGE
+		     , TOS_CONTENT
+		     , TOS_NOTE
+		  FROM TOS
+		 WHERE TOS_PAGE = ?
+		   AND UPLOAD_DATE IS NOT NULL
+		   AND TOS_CATEGORY = '게시중'  
+	</entry>
+	
+	
+</properties>

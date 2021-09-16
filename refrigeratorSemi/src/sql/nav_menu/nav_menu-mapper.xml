@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="seletNavMenuList">
+		SELECT
+		       MENU_NO
+		     , MENU_NAME 
+	         , MENU_ORDER
+	      FROM NAV_MENU
+	     ORDER
+	        BY MENU_NO       
+	</entry>
+
+	<entry key="updateNavMenu">
+		UPDATE
+		       NAV_MENU
+		   SET MENU_ORDER = CASE 
+		                      WHEN MENU_NO=1 THEN ?   
+  		                      WHEN MENU_NO=2 THEN ?   
+		                      WHEN MENU_NO=3 THEN ?   
+		                      WHEN MENU_NO=4 THEN ?   
+		                      WHEN MENU_NO=5 THEN ?   
+		                      END
+	</entry>
+</properties>

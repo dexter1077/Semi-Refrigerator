@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="selectMainList">
+		SELECT 
+		        CATEGORY_MNO
+		      , CATEGORY_NAME
+		  FROM MAIN_CAT    
+		 ORDER
+		    BY CATEGORY_MNO 
+	</entry>
+
+	<entry key="insertMainCategory">
+		INSERT
+		  INTO MAIN_CAT
+		  (
+		  	CATEGORY_MNO
+		  , CATEGORY_NAME	
+		  )
+		 VALUES
+		 (
+		 	SEQ_MCNO.NEXTVAL
+		  , ?	
+		 )
+	</entry>
+
+
+
+	<!-- 관리자단에서 카테고리 대분류 수정 -->
+	<!-- @author seong 6/2 -->
+	<entry key="updateMainCategory">
+	
+	   UPDATE MAIN_CAT
+	   SET CATEGORY_NAME = ?
+	   WHERE CATEGORY_MNO = ?
+	
+	</entry>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</properties>

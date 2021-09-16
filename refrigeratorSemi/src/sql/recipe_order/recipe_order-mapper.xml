@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<!-- @author HeeRak -->
+	<!-- 요리순서 insert[이미지o]  -->
+	<entry key="insertRecipeOrderList">
+		INSERT
+		  INTO RECIPE_ORDER
+		     (
+		       RECIPE_ORDER_NO
+		     , RECIPE_NO
+		     , RECIPE_ORDER
+		     , RECIPE_EXPLN
+		     , RECIPE_IMG
+		     )
+		VALUES
+			 (
+			   SEQ_RONO.NEXTVAL
+			 , SEQ_RNO.CURRVAL
+			 , ?
+			 , ?
+			 , ?
+			 )
+	</entry>
+	
+	<!-- @author HeeRak -->
+	<!-- 요리순서 insert[이미지x]  -->
+	<entry key="insertNoImgRecipeOrderList">
+		INSERT
+		  INTO RECIPE_ORDER
+		     (
+		       RECIPE_ORDER_NO
+		     , RECIPE_NO
+		     , RECIPE_ORDER
+		     , RECIPE_EXPLN
+		     )
+		VALUES
+			 (
+			   SEQ_RONO.NEXTVAL
+			 , SEQ_RNO.CURRVAL
+			 , ?
+			 , ?
+			 )
+	</entry>
+
+</properties>

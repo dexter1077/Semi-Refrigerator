@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="selectList">
+		SELECT 
+		       SC.RECIPE_NO
+		     , RECIPE_TITLE
+		     , COOKING_TIME
+		     , RC.LIKE_COUNT
+		     , MAIN_IMG
+		     , NICKNAME
+		     , PROFILE_IMG
+		     , RC.AVRG_STAR_POINT
+		  FROM RECIPE RC
+		  JOIN SCRAP SC ON RC.RECIPE_NO = SC.RECIPE_NO
+		  JOIN MEMBER M ON M.USER_NO = RC.USER_NO
+		 WHERE SC.USER_NO = ?
+	</entry>
+	
+	<entry key="deleteScrap">
+		DELETE 
+		  FROM SCRAP
+		 WHERE RECIPE_NO = ?
+		   AND USER_NO = ?
+	</entry>
+	
+	<!-- @author leeyeji -->
+	<!-- 유저 레시피 스크랩 -->
+	<entry key="insertScrap">
+		INSERT
+		  INTO SCRAP
+		     (
+		       RECIPE_NO
+		     , USER_NO
+		     )
+		VALUES 
+		     (
+		       ?
+		     , ?
+		     )
+	</entry>
+	
+	<!-- @author seong -->
+	<!-- 스크랩 카운트 증가 -->
+	<entry key="increaseScrapCount">
+	
+		UPDATE RECIPE
+		SET SCRAP_COUNT = SCRAP_COUNT +1
+		WHERE RECIPE_NO = ( SELECT RECIPE_NO 
+		                    FROM SCRAP
+		                    WHERE USER_NO = ?
+		                    AND RECIPE_NO = ?)
+		 
+	</entry>
+	
+	
+	
+</properties>

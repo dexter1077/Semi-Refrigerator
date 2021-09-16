@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+
+	<!-- 등록된 요리 후기 전체 갯수 조회-->
+	<!-- @author seong 5/30  -->
+	
+	<entry key="selectReviewListCount">
+		SELECT 
+			COUNT(*) COUNT
+		FROM 
+			REVIEW
+	</entry>
+	
+	
+	
+	<!--회원이 작성한 요리 후기 전체 조회 -->
+	<!-- @author seong 5/30 -->
+	
+	<entry key="adminSelectReviewList">
+	
+	SELECT * 
+	FROM (
+	        SELECT ROWNUM RNUM, A.*
+	        FROM (SELECT 
+	                        REVIEW_NO
+	                        , USER_ID
+	                        , RECIPE_TITLE
+	                        , STAR
+	                        , REVIEW_CONTENT
+	                        , R.ENROLL_DATE 
+	                FROM REVIEW R
+	                JOIN MEMBER USING(USER_NO)
+	                JOIN RECIPE USING(RECIPE_NO)
+	                ORDER BY R.ENROLL_DATE DESC
+	                ) A 
+	     ) 
+	WHERE RNUM BETWEEN ? AND ?
+	
+	</entry>
+	
+	
+	<!-- 관리자가 선택한 요리 후기 삭제 -->
+	<!-- @author seong 5/30 -->
+	
+	<entry key="adminDeleteReview">
+	
+		DELETE REVIEW
+		WHERE REVIEW_NO = ?
+	
+	</entry>
+	
+	<!-- 로그인한 사용자의 요리후기&별점 글count -->
+	<!-- @author HeeRak -->
+	
+	<entry key="selectUserReviewListCount">
+		SELECT COUNT(*)
+		  FROM REVIEW
+		 WHERE USER_NO = ?
+	</entry>
+	
+	<!--로그인한 사용자의 요리후기&별점 글list-->
+	<!-- @author Heerak-->
+	<entry key="selectUserReviewList">
+	SELECT *
+	  FROM (
+	        SELECT ROWNUM RNUM, A.*
+	          FROM (
+	                SELECT REVIEW_NO
+	                     , RECIPE_NO
+	                     , REVIEW_CONTENT
+	                     , STAR
+	                     , IMG_NAME
+	                     , MODIFY_DATE
+	                 FROM REVIEW
+	                WHERE USER_NO = ?
+	                ORDER
+	                   BY MODIFY_DATE DESC
+	               )A
+	       )
+	 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<!--로그인한 사용자가 체크한 요리후기&별점 글삭제-->
+	<!-- @author Heerak-->
+	<entry key="deleteReviewUser">
+		DELETE 
+		  FROM REVIEW
+		 WHERE REVIEW_NO = ?
+	</entry>
+	
+	<!-- 마이페이지_수정버튼 클릭시 리뷰 정보 조회 -->
+	<!-- @author Heerak-->
+	<entry key="selectReview">
+		SELECT REVIEW_NO
+			 , USER_NO
+			 , RECIPE_NO
+			 , REVIEW_CONTENT
+			 , STAR
+			 , IMG_NAME
+			 , MODIFY_DATE
+		  FROM REVIEW
+		 WHERE REVIEW_NO = ?
+	</entry>
+	
+	<!-- 마이페이지_리뷰 수정 -->
+	<!-- @author Heerak-->
+	<entry key="updateReview">
+		UPDATE REVIEW
+		   SET REVIEW_CONTENT = ?
+			 , STAR = ?
+			 , IMG_NAME = ?
+			 , MODIFY_DATE = SYSDATE
+		 WHERE REVIEW_NO = ?
+	</entry>
+	
+	<!-- 마이페이지_리뷰 수정(사진x) -->
+	<!-- @author Heerak-->
+	<entry key="updateReviewNoImg">
+		UPDATE REVIEW
+		   SET REVIEW_CONTENT = ?
+			 , STAR = ?
+			 , MODIFY_DATE = SYSDATE
+		 WHERE REVIEW_NO = ?
+	</entry>
+
+	<!-- 아이디 검색 총 갯수 -->
+	<entry key="selectUserListCount">
+		SELECT COUNT(*) COUNT
+		  FROM REVIEW 
+		  JOIN MEMBER USING (USER_NO)
+		 WHERE USER_ID LIKE ?
+	</entry>
+	
+	<!-- 아이디 검색 결과 목록 -->
+	<entry key="selectSearchUserList">
+		      SELECT *
+        FROM (
+              SELECT ROWNUM RNUM, A.*
+                FROM (
+                      SELECT 
+                                REVIEW_NO
+                                , USER_ID
+                                , RECIPE_TITLE
+                                , STAR
+                                , REVIEW_CONTENT
+                                , R.ENROLL_DATE 
+                        FROM REVIEW R
+                        JOIN MEMBER USING(USER_NO)
+                        JOIN RECIPE USING(RECIPE_NO)
+                        WHERE USER_ID LIKE ?
+                        ORDER BY R.ENROLL_DATE DESC
+                      )A
+          )
+       WHERE RNUM BETWEEN ? AND ?
+	</entry>
+
+</properties>

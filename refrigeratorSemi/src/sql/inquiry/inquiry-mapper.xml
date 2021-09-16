@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<!--YunHeeRak 05.27 -->
+	
+	<entry key="selectUnsolvedListCount">
+		SELECT COUNT(*)
+		  FROM INQUIRY
+		 WHERE ANSWER_DATE IS NULL
+	</entry>
+	
+	<entry key="selectSolvedListCount">
+		SELECT COUNT(*)
+		  FROM INQUIRY
+		 WHERE ANSWER_DATE IS NOT NULL
+	</entry>
+	
+	<entry key="selectUnSolvedList">
+		SELECT *
+		  FROM (
+		          SELECT ROWNUM RNUM , A.*
+		          FROM (SELECT 
+		                       INQRY_NO
+		                     , USER_ID
+		                     , INQRY_TITLE
+		                     , INQRY_CONTENT
+		                     , I.MODIFY_DATE
+		                  FROM INQUIRY I 
+		                  JOIN MEMBER USING(USER_NO)
+		                 WHERE ANSWER_DATE IS NULL
+		                 ORDER
+		                    BY I.MODIFY_DATE ASC) A)
+		 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<entry key="selectSolvedList">
+		SELECT *
+	  FROM (
+	          SELECT ROWNUM RNUM , A.*
+	          FROM (SELECT 
+	                       INQRY_NO
+	                     , USER_ID
+	                     , INQRY_TITLE
+	                     , INQRY_CONTENT
+	                     , I.MODIFY_DATE
+	                     , ANSWER_DATE
+	                     , INQRY_ANSWER
+	                  FROM INQUIRY I 
+	                  JOIN MEMBER USING(USER_NO)
+	                 WHERE ANSWER_DATE IS NOT NULL
+	                 ORDER
+	                    BY ANSWER_DATE DESC) A)
+	 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<entry key="selectUnSolvedInquiry">
+		SELECT 
+			   INQRY_TITLE
+			 , INQRY_CONTENT
+	  	  FROM INQUIRY
+	  	 WHERE ANSWER_DATE IS NULL
+	  	   AND INQRY_ANSWER IS NULL
+	  	   AND INQRY_NO = ?
+	</entry>
+	
+	<entry key="selectSolvedInquiry">
+		SELECT 
+			   INQRY_TITLE
+			 , INQRY_CONTENT
+			 , INQRY_ANSWER
+	  	  FROM INQUIRY
+	  	 WHERE ANSWER_DATE IS NOT NULL
+	  	   AND INQRY_ANSWER IS NOT NULL
+	  	   AND INQRY_NO = ?
+	</entry>
+	
+	<entry key="updateInquiryAnswer">
+		UPDATE INQUIRY
+		   SET INQRY_ANSWER = ?
+		     , ANSWER_DATE = SYSDATE
+		 WHERE INQRY_NO = ?
+		   
+	</entry>
+	
+	<!-- @author leeyeji -->
+	<!-- 1:1문의 총 갯수-->
+	<entry key="selectListCount">
+		SELECT COUNT(*) COUNT
+		  FROM INQUIRY
+	</entry>
+
+	<!-- @author leeyeji -->
+	<!-- 1:1문의 전체 목록 -->
+	<entry key="selectList">
+		SELECT *
+		  FROM (
+		        SELECT ROWNUM RNUM, I.*
+		          FROM (
+		                SELECT
+		                       INQRY_NO
+		                     , M.USER_ID
+                             , INQRY_TITLE
+                             , Q.ENROLL_DATE
+                             , Q.MODIFY_DATE
+		                  FROM INQUIRY Q
+                          JOIN MEMBER M USING(USER_NO)
+		                 ORDER
+		                    BY MODIFY_DATE DESC
+		                ) I
+		        )
+		 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+
+	<!-- @author leeyeji -->
+	<!-- 1:1문의 상세 조회 -->
+	<entry key="selectInquiry">
+		SELECT 
+               M.USER_ID
+             , INQRY_TITLE
+             , INQRY_CONTENT
+             , I.ENROLL_DATE 
+             , I.MODIFY_DATE 
+             , INQRY_ANSWER
+		  FROM INQUIRY I
+		  JOIN MEMBER M USING(USER_NO)
+		 WHERE INQRY_NO = ?
+	</entry>
+
+	<!-- @author leeyeji -->
+	<!-- 1:1 문의 등록 -->
+	<entry key="insertInquiry">
+		INSERT
+		  INTO INQUIRY
+		  (
+		    INQRY_NO
+		  , USER_NO
+		  , INQRY_TITLE
+          , INQRY_CONTENT
+		  )
+		  VALUES
+		  (
+		    SEQ_FNO.NEXTVAL
+		  , ?
+		  , ?
+		  , ?
+		  )
+	</entry>
+
+
+
+</properties>

@@ -1,2 +1,2 @@
-# semiPerson
-세미프로젝트(냉장고에 뭐있지?)
+# refrigerator_semiProject
+냉장고에 뭐 있지? 세미프로젝트
